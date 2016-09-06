@@ -1,3 +1,4 @@
+import os
 import yaml
 import scipy 
 import simple as s
@@ -7,6 +8,12 @@ from mpi4py import MPI
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
+
+outdir = os.path.abspath('models')
+try:
+    os.mkdir(outdir)
+except:
+    pass
 
 # partition an iterable i into n parts
 _split = lambda i,n: [i[:len(i)/n]]+_split(i[len(i)/n:],n-1) if n != 0 else []
@@ -24,7 +31,6 @@ for n in config['nickel']:
 
 my_jobs = _split(grid, size)[rank]
 layers = s.load_s15_layers()[1:]
-
 delta = -config['alpha']
 n = -config['beta']
 zeta_v = np.sqrt(2 * (5 - delta) * (n - 5) / ((3 - delta) * (n - 3)))
@@ -41,7 +47,7 @@ for job in my_jobs:
                                  nzones=config['nzones'])
     ma = mixer(atm)
     fig, axarr = ma.plot(show=False, thermal=True)
-    name = '_'.join(['%05e'] * 5) % job
+    name = os.path.join(outdir, '_'.join(['%05e'] * 5) % job)
 
     ma.write(name + '.mod')
     fig.savefig(name + '.pdf')
