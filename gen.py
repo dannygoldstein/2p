@@ -30,19 +30,19 @@ for n in config['nickel']:
                     grid.append((e, n, o, he, h))
 
 my_jobs = _split(grid, size)[rank]
-layers = s.load_s15_layers()[1:]
+layers = s.heger_s15_layers()[1:]
 delta = -config['alpha']
 n = -config['beta']
 zeta_v = np.sqrt(2 * (5 - delta) * (n - 5) / ((3 - delta) * (n - 3)))
-mixer = simple.DiffusionMixer(config['mixing'])
+mixer = s.DiffusionMixer(config['mixing'])
 
 for job in my_jobs:
     masses = job[1:]
     vt = 6e3 * zeta_v * np.sqrt(job[0] * 2 * 1.38 / sum(masses)) # km/s
     profile = s.BrokenPowerLaw(config['alpha'], config['beta'], vt)
     atm = s.StratifiedAtmosphere(layers, masses, profile, 
-                                 thermal_energy=job[0], 
-                                 thermal_energy_profile=profile,
+                                 thermal_energy=job[0],
+                                 thermal_profile=profile,
                                  v_outer=config['v_outer'],
                                  nzones=config['nzones'])
     ma = mixer(atm)
