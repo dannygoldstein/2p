@@ -26,5 +26,5 @@ ox:
 alpha: -1
 beta: -10
 mixing: 200
-v_outer: 50000.
+v_outer: 5.e+4
 nzones: 200

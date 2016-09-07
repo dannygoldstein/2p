@@ -5,6 +5,7 @@ import scipy
 import simple as s
 import numpy as np
 from mpi4py import MPI
+import matplotlib.pyplot as plt
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -45,8 +46,8 @@ for job in my_jobs:
     masses = job[1:]
     vt = 6e3 * zeta_v * np.sqrt(job[0] * 2 * 1.38 / sum(masses)) # km/s
     profile = s.BrokenPowerLaw(config['alpha'], config['beta'], vt)
-    atm = s.StratifiedAtmosphere(layers, masses, profile, 
-                                 thermal_energy=job[0],
+    atm = s.StratifiedAtmosphere(layers, masses, profile,
+                                 thermal_energy=job[0] * 1e51,
                                  thermal_profile=profile,
                                  v_outer=config['v_outer'],
                                  nzones=config['nzones'])
@@ -56,3 +57,4 @@ for job in my_jobs:
 
     ma.write(name + '.mod')
     fig.savefig(name + '.pdf')
+    plt.close(fig)
