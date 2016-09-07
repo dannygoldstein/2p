@@ -53,6 +53,13 @@ for job in my_jobs:
                                  nzones=config['nzones'])
     ma = mixer(atm)
     fig, axarr = ma.plot(show=False, thermal=True)
+    fig.subplots_adjust(bottom=0.1)
+    caption = r'$E_{th}=%0.2f \times 10^{51} \mathrm{erg}, ' \
+              'M_{^{56}\mathrm{Ni Layer}}=%0.2f M_\odot, ' \
+              'M_{O\mathrm{ Layer}}=%0.2f M_\odot, ' \
+              'M_{He\mathrm{ Layer}}=%0.2f M_\odot, ' \
+              'M_{H\mathrm{ Layer}}=%0.2f M_\odot$'
+    fig.text(.02, .02, caption % job)
     name = os.path.join(outdir, '_'.join(['%0.2e'] * 5) % job)
 
     ma.write(name + '.mod')
