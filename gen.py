@@ -1,4 +1,5 @@
 import os
+import shutil
 import yaml
 import scipy 
 import simple as s
@@ -10,10 +11,14 @@ rank = comm.Get_rank()
 size = comm.Get_size()
 
 outdir = os.path.abspath('models')
-try:
-    os.mkdir(outdir)
-except:
-    pass
+
+if rank == 0:
+    try:
+        os.mkdir(outdir)
+    except:
+        shutil.rmtree(outdir)
+        os.mkdir(outdir)
+comm.Barrier()
 
 # partition an iterable i into n parts
 _split = lambda i,n: [i[:len(i)/n]]+_split(i[len(i)/n:],n-1) if n != 0 else []
