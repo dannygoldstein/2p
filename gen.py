@@ -52,7 +52,7 @@ for job in my_jobs:
                                  nzones=config['nzones'])
     ma = mixer(atm)
     fig, axarr = ma.plot(show=False, thermal=True)
-    name = os.path.join(outdir, '_'.join(['%02e'] * 5) % job)
+    name = os.path.join(outdir, '_'.join(['%0.2e'] * 5) % job)
 
     ma.write(name + '.mod')
     fig.savefig(name + '.pdf')
